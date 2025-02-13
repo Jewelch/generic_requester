@@ -1,6 +1,16 @@
 import 'dart:math' as math;
 
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart'
+    show
+        DioException,
+        DioExceptionType,
+        Interceptor,
+        RequestOptions,
+        RequestInterceptorHandler,
+        Response,
+        ResponseInterceptorHandler,
+        FormData,
+        ErrorInterceptorHandler;
 
 import 'debugging_printer.dart';
 

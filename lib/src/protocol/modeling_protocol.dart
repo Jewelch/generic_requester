@@ -1,7 +1,4 @@
-//@ Where else can you find ValueNotifiers ?? :D
-import 'package:equatable/equatable.dart';
-
-export 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart' show EquatableMixin;
 
 abstract class _Decodable<T> with EquatableMixin {
   /// You should implement this method in order to make the model useable by `performDecodingRequest` method
