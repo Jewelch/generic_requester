@@ -12,9 +12,19 @@ import './utils/pretty_dio_logger.dart';
 class RequestPerformer {
   static final _backgroundTransformer = BackgroundTransformer();
 
-  static late BaseOptions baseOptions;
-  static bool debugginActivated = false;
-  static bool mockingEnabled = false;
+  static void configure(
+    BaseOptions baseOptions, {
+    bool debugginActivated = false,
+    bool mockingEnabled = false,
+  }) {
+    _baseOptions = baseOptions;
+    _debugginActivated = debugginActivated;
+    _mockingEnabled = mockingEnabled;
+  }
+
+  static late BaseOptions _baseOptions;
+  static bool _debugginActivated = false;
+  static bool _mockingEnabled = false;
 
   /// ### A generic method that consumes an API and handles automatic data serialization/mocking
   Future<R?> performDecodingRequest<R, MP extends ModelingProtocol>({
@@ -34,7 +44,7 @@ class RequestPerformer {
     final ProgressCallback? onReceiveProgress,
   }) async {
     //! Dio definition
-    final dio = Dio(RequestPerformer.baseOptions);
+    final dio = Dio(RequestPerformer._baseOptions);
 
     //! Interceptor setup
     dio.interceptors
@@ -55,13 +65,13 @@ class RequestPerformer {
         ),
       )
       ..addBasedOnCondition(
-        condition: debugginActivated || debugIt,
+        condition: _debugginActivated || debugIt,
         PrettyDioLogger.instance,
       );
 
     dio.transformer = _backgroundTransformer;
 
-    if (mockingEnabled || mockIt) {
+    if (_mockingEnabled || mockIt) {
       await Future.delayed(const Duration(milliseconds: 500));
       return decode(
         decodableModel,
