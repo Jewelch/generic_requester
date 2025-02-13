@@ -1,5 +1,6 @@
 import '../../generic_requester.dart';
 import '../extensions/iterable_ext.dart';
+import '../extensions/string_keyed_map_ext.dart';
 import '../utils/pretty_dio_logger.dart';
 import 'decoder.dart';
 

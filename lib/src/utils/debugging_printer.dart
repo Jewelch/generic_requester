@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' show log;
 
 abstract final class Debugger {
   static void black(text) => log('\x1B[30m$text\x1B[0m');
