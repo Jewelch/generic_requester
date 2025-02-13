@@ -11,6 +11,4 @@ extension HeadersInjections on StringKeyedMap {
     ..addAll(
       {HttpHeaders.acceptHeader: 'application/$acceptedFormat'},
     );
-
-  StringKeyedMap addExtraHeaders(StringKeyedMap? extraHeaders) => this..addAll(extraHeaders ?? {});
 }

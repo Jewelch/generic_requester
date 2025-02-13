@@ -1,6 +1,5 @@
 import '../../generic_requester.dart';
 import '../extensions/iterable_ext.dart';
-import '../extensions/string_keyed_map_ext.dart';
 import '../utils/pretty_dio_logger.dart';
 import 'decoder.dart';
 
@@ -20,12 +19,16 @@ class RequestPerformer {
     _mockingEnabled = mockingEnabled;
   }
 
+  static final Map<String, dynamic> headers = {
+    'Content-Type': 'application/json',
+  };
+
   static late BaseOptions _baseOptions;
   static late QueuedInterceptorsWrapper? _interceptor;
   static bool _debugginActivated = false;
   static bool _mockingEnabled = false;
 
-  static final _decoder = GenericResponseDecoder();
+  final _decoder = GenericResponseDecoder();
 
   /// ### A generic method that consumes an API and handles automatic data serialization/mocking
   Future<R?> performDecodingRequest<R, MP extends ModelingProtocol>({
@@ -49,7 +52,8 @@ class RequestPerformer {
       _baseOptions
         ..baseUrl = baseUrl ?? _baseOptions.baseUrl
         ..contentType = contentType
-        ..headers.addExtraHeaders(extraHeaders),
+        ..headers.addAll(headers)
+        ..headers.addAll(extraHeaders ?? {}),
     );
 
     //! Interceptor setup
@@ -88,6 +92,6 @@ class RequestPerformer {
           onSendProgress: onSendProgress,
           onReceiveProgress: onReceiveProgress,
         )
-        .then((response) => _decoder.decode<MP>(decodableModel, response: response)) as R;
+        .then((response) => _decoder.decode<MP>(decodableModel, response: response));
   }
 }

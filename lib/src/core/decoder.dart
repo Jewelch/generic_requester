@@ -2,8 +2,8 @@ import '../../generic_requester.dart'
     show ModelingProtocol, PatchingModel, StringKeyedMap, DioException, RequestOptions, Response;
 
 class GenericResponseDecoder {
-  dynamic decode<T extends ModelingProtocol>(
-    T decodableModel, {
+  dynamic decode<MP extends ModelingProtocol>(
+    MP decodableModel, {
     Response<dynamic>? response,
     dynamic mockingData,
     bool mocking = false,
