@@ -9,4 +9,5 @@ export './models/no_data_model.dart';
 export './models/patching_model.dart';
 export './protocol/modeling_protocol.dart';
 export './request_performer.dart';
+export './utils/debugging_printer.dart';
 export './utils/networking_utilities.dart';
