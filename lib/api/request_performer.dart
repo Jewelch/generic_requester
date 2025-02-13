@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:jch_requester/api/extensions/index.dart';
 
 import './exports.dart';
-import './utils/debugging_printer.dart';
 import './utils/pretty_dio_logger.dart';
 
 /// #### A Generic request performer based on a smart Dio Interceptor
@@ -14,15 +13,18 @@ class RequestPerformer {
 
   static void configure(
     BaseOptions baseOptions, {
+    QueuedInterceptorsWrapper? interceptor,
     bool debugginActivated = false,
     bool mockingEnabled = false,
   }) {
     _baseOptions = baseOptions;
+    _interceptor = interceptor;
     _debugginActivated = debugginActivated;
     _mockingEnabled = mockingEnabled;
   }
 
   static late BaseOptions _baseOptions;
+  static late QueuedInterceptorsWrapper? _interceptor;
   static bool _debugginActivated = false;
   static bool _mockingEnabled = false;
 
@@ -51,18 +53,7 @@ class RequestPerformer {
       ..clear()
       ..addBasedOnCondition(
         condition: !kReleaseMode,
-        QueuedInterceptorsWrapper(
-          onRequest: (options, handler) async {
-            return handler.next(options);
-          },
-          onResponse: (response, handler) {
-            return handler.next(response);
-          },
-          onError: (error, handler) {
-            Debugger.red(error.response?.data?["body"]?["message"]);
-            return handler.next(error);
-          },
-        ),
+        _interceptor,
       )
       ..addBasedOnCondition(
         condition: _debugginActivated || debugIt,
