@@ -57,5 +57,12 @@ LinkedIn: [Jewel Cheriaa](https://www.linkedin.com/in/jewel-cheriaa/)
 Mobile: +216 24 226 712  
 WhatsApp: +33 7 43 10 44 25  
 
+## Contributor
+
+**Elarbi Chraiet**
+- Email: elarbi.chraiet@gmail.com
+- LinkedIn: [Elarbi Chraiet](https://www.linkedin.com/in/chraiet-elarbi-606b92138/)
+- Mobile (WhatsApp): +33 7 66 06 31 2
+
 ## License
 This package is licensed under the MIT License. See the LICENSE file for more details.
