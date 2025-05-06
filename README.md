@@ -75,10 +75,10 @@ FutureRequestResult<TodoModel> getTodoById(int id) async {
 ## Author
 
 **Jewel Cheriaa**  
-Email: [jewelcheriaa@gmail.com](mailto:jewelcheriaa@gmail.com)
-LinkedIn: [Jewel Cheriaa](https://www.linkedin.com/in/jewel-cheriaa/)
-Mobile: +216 24 226 712  
-WhatsApp: +33 7 43 10 44 25  
+- Email: [jewelcheriaa@gmail.com](mailto:jewelcheriaa@gmail.com)
+- LinkedIn: [Jewel Cheriaa](https://www.linkedin.com/in/jewel-cheriaa/)
+- Mobile: +216 24 226 712  
+- WhatsApp: +33 7 43 10 44 25  
 
 ## Contributor
 
