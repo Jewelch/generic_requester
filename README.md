@@ -14,9 +14,32 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  jch_requester:
+  generic_requester:
     git:
       url: https://github.com/Jewelch/generic_requester.git
+```
+
+## Model Requirements
+
+All models used with `generic_requester` must implement the `ModelingProtocol` interface to ensure proper deserialization. Here's an example:
+
+```dart
+class TodoModel extends ModelingProtocol {
+  final int? id;
+  final String? title;
+  final bool? isCompleted;
+  final int? userId;
+
+  TodoModel({this.id, this.title, this.isCompleted, this.userId});
+
+  @override
+  fromJson(json) => TodoModel(
+    id: json['id'] as int?,
+    title: json['todo'] as String?,
+    isCompleted: json['completed'] as bool?,
+    userId: json['userId'] as int?,
+  );
+}
 ```
 
 ## Example Usage
