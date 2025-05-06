@@ -3,6 +3,9 @@ import 'package:equatable/equatable.dart' show EquatableMixin;
 abstract class _Decodable<T> with EquatableMixin {
   /// You should implement this method in order to make the model useable by `performDecodingRequest` method
   T fromJson(dynamic json);
+
+  @override
+  List<Object?> get props => [];
 }
 
 mixin _Mockable on _Decodable {

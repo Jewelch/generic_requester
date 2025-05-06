@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jch_requester/src/extensions/iterable_ext.dart';
+import 'package:generic_requester/src/extensions/iterable_ext.dart';
 
 void main() {
   group('Iterable Extensions', () {
