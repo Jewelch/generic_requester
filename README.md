@@ -47,23 +47,23 @@ class TodoModel extends ModelingProtocol {
 Here's an example of how to use the `performDecodingRequest` method:
 
 ```dart
-FutureRequestResult<FavoriteProductsModel> getFavoriteProducts(
-  String? userId, {
-  required bool isHistory,
-}) async {
+FutureRequestResult<TodoModel> getTodoById(int id) async {
   try {
     return Right(
       await performDecodingRequest(
-        baseUrl: AppConfig.currentEnvironment.firebaseUrl,
-        path:  "api/products/favorite",
+        baseUrl: "https://dummyjson.com/",
+        path:  "todos/$id",
         method: RestfullMethods.get,
         extraHeaders: {
           'Authorization': 'Bearer ${AppConfig.currentEnvironment.firebaseBearerToken}',
         },
-        body: {
-          "userId": userId,
+        queryParemeters: {
+          'url_key': 'value',
         },
-        decodableModel: FavoriteProductsModel(),
+        body: {
+          "body_key": "value",
+        },
+        decodableModel: TodoModel(),
       ),
     );
   } on DioException catch (e) {
