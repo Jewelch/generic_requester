@@ -15,6 +15,8 @@ sealed class Either<L, R> {
       };
 
   bool isRight() => !isLeft();
+
+  R getOrElse(R Function() dflt) => fold((_) => dflt(), (r) => r);
 }
 
 class Left<L, R> extends Either<L, R> {
