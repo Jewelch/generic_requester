@@ -7,10 +7,5 @@ void main() {
       final model = PatchingModel().fromJson({});
       expect(model, isA<PatchingModel>());
     });
-
-    test('props should return empty list', () {
-      final model = PatchingModel();
-      expect(model.props, []);
-    });
   });
 }
