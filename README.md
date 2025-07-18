@@ -14,9 +14,32 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  jch_requester:
+  generic_requester:
     git:
       url: https://github.com/Jewelch/generic_requester.git
+```
+
+## Model Requirements
+
+All models used with `generic_requester` must implement the `ModelingProtocol` interface to ensure proper deserialization. Here's an example:
+
+```dart
+class TodoModel extends ModelingProtocol {
+  final int? id;
+  final String? title;
+  final bool? isCompleted;
+  final int? userId;
+
+  TodoModel({this.id, this.title, this.isCompleted, this.userId});
+
+  @override
+  fromJson(json) => TodoModel(
+    id: json['id'] as int?,
+    title: json['todo'] as String?,
+    isCompleted: json['completed'] as bool?,
+    userId: json['userId'] as int?,
+  );
+}
 ```
 
 ## Example Usage
@@ -24,23 +47,23 @@ dependencies:
 Here's an example of how to use the `performDecodingRequest` method:
 
 ```dart
-FutureRequestResult<FavoriteProductsModel> getFavoriteProducts(
-  String? userId, {
-  required bool isHistory,
-}) async {
+FutureRequestResult<TodoModel> getTodoById(int id) async {
   try {
     return Right(
       await performDecodingRequest(
-        baseUrl: AppConfig.currentEnvironment.firebaseUrl,
-        path:  "api/products/favorite",
+        baseUrl: "https://dummyjson.com/",
+        path:  "todos/$id",
         method: RestfullMethods.get,
         extraHeaders: {
           'Authorization': 'Bearer ${AppConfig.currentEnvironment.firebaseBearerToken}',
         },
-        body: {
-          "userId": userId,
+        queryParemeters: {
+          'url_key': 'value',
         },
-        decodableModel: FavoriteProductsModel(),
+        body: {
+          "body_key": "value",
+        },
+        decodableModel: TodoModel(),
       ),
     );
   } on DioException catch (e) {
@@ -52,10 +75,17 @@ FutureRequestResult<FavoriteProductsModel> getFavoriteProducts(
 ## Author
 
 **Jewel Cheriaa**  
-Email: [jewelcheriaa@gmail.com](mailto:jewelcheriaa@gmail.com)
-LinkedIn: [Jewel Cheriaa](https://www.linkedin.com/in/jewel-cheriaa/)
-Mobile: +216 24 226 712  
-WhatsApp: +33 7 43 10 44 25  
+- Email: [jewelcheriaa@gmail.com](mailto:jewelcheriaa@gmail.com)
+- LinkedIn: [Jewel Cheriaa](https://www.linkedin.com/in/jewel-cheriaa/)
+- Mobile: +216 24 226 712  
+- WhatsApp: +33 7 43 10 44 25  
+
+## Contributor
+
+**Elarbi Chraiet**
+- Email: elarbi.chraiet@gmail.com
+- LinkedIn: [Elarbi Chraiet](https://www.linkedin.com/in/chraiet-elarbi-606b92138/)
+- Mobile (WhatsApp): +33 7 66 06 31 2
 
 ## License
 This package is licensed under the MIT License. See the LICENSE file for more details.

@@ -1,6 +1,9 @@
 abstract class _Decodable<T> {
   /// You should implement this method in order to make the model useable by `performDecodingRequest` method
   T fromJson(dynamic json);
+
+  @override
+  List<Object?> get props => [];
 }
 
 mixin _Mockable on _Decodable {
