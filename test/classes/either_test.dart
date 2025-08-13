@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:generic_requester/src/classes/either.dart';
+import 'package:generic_requester/src/utils/either.dart';
 
 void main() {
   group('Either', () {

@@ -5,6 +5,17 @@ import 'decoder.dart';
 
 /// #### A Generic request performer based on a smart Dio Interceptor
 class RequestPerformer {
+  final Dio dio;
+
+  RequestPerformer() : dio = Dio();
+
+  @visibleForTesting
+  RequestPerformer.mockWith(this.dio);
+
+  static final Map<String, dynamic> headers = {
+    'Content-Type': 'application/json',
+  };
+
   static final _backgroundTransformer = BackgroundTransformer();
 
   static void configure(
@@ -18,10 +29,6 @@ class RequestPerformer {
     _debugginActivated = debugginActivated;
     _mockingEnabled = mockingEnabled;
   }
-
-  static final Map<String, dynamic> headers = {
-    'Content-Type': 'application/json',
-  };
 
   static late BaseOptions _baseOptions;
   static late QueuedInterceptorsWrapper? _interceptor;
@@ -46,14 +53,13 @@ class RequestPerformer {
     final CancelToken? cancelToken,
     final ProgressCallback? onSendProgress,
     final ProgressCallback? onReceiveProgress,
+    final dynamic mockingData,
   }) async {
     //! Dio definition
-    final dio = Dio(
-      _baseOptions
-        ..baseUrl = baseUrl ?? _baseOptions.baseUrl
-        ..contentType = contentType
-        ..headers.addAll(headers)
-        ..headers.addAll(extraHeaders ?? {}),
+    dio.options = BaseOptions(
+      baseUrl: baseUrl ?? _baseOptions.baseUrl,
+      contentType: contentType,
+      headers: headers..addAll(extraHeaders ?? {}),
     );
 
     //! Interceptor setup
@@ -76,7 +82,7 @@ class RequestPerformer {
       await Future.delayed(const Duration(milliseconds: 500));
       return _decoder.decode<MP>(
         decodableModel,
-        mockingData: decodableModel.mockingData,
+        mockingData: mockingData,
         mocking: true,
       ) as R;
     }

@@ -1,5 +1,6 @@
-import '../../generic_requester.dart'
-    show ModelingProtocol, PatchingModel, StringKeyedMap, DioException, RequestOptions, Response;
+import '../../generic_requester.dart' show ModelingProtocol, Response;
+import '../models/patching_model.dart';
+import 'errors/exceptions.dart';
 
 class GenericResponseDecoder {
   dynamic decode<MP extends ModelingProtocol>(
@@ -8,36 +9,23 @@ class GenericResponseDecoder {
     dynamic mockingData,
     bool mocking = false,
   }) {
-    if (mockingData == null && response == null) {
-      throw DioException(
-        requestOptions: RequestOptions(path: "Decoding Process Has Failed"),
-        message: "You should provide either some mocking data or a real response to be treated",
-      );
-    }
+    if (mockingData == null && response == null) throw NoDataToDecodeException();
 
-    final data = mockingData ?? response?.data;
+    final data = mocking ? mockingData : response?.data;
+
+    if (data is! List && data is! Map<String, dynamic>) throw UnsupportedDataTypeException();
 
     try {
-      if (decodableModel is PatchingModel) {
-        return decodableModel.fromJson({
-          'success': mocking ? true : (data.statusCode >= 200 && data.statusCode < 300),
-        });
-      }
-
-      if (data is List || data is StringKeyedMap) {
-        return decodableModel.fromJson(data);
-      } else {
-        throw DioException(
-          requestOptions: RequestOptions(path: "Decoding Process Has Failed"),
-          message: "Invalid data type",
-        );
-      }
-    } catch (e, stackTrace) {
-      throw DioException(
-        requestOptions: RequestOptions(path: "Decoding Process Has Failed"),
-        message: e.toString(),
-        stackTrace: stackTrace,
-      );
+      return (decodableModel is NoDataModel)
+          ? decodableModel.fromJson(
+              {
+                'success':
+                    mocking ? true : (response!.statusCode! >= 200 && response.statusCode! < 300),
+              },
+            )
+          : decodableModel.fromJson(data);
+    } catch (_) {
+      throw JsonParsingException();
     }
   }
 }

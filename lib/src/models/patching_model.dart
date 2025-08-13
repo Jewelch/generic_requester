@@ -1,10 +1,13 @@
 import '../protocol/modeling_protocol.dart';
 
-class PatchingModel extends ModelingProtocol {
+final class NoDataModel extends ModelingProtocol {
   final bool? success;
 
-  PatchingModel({this.success});
+  NoDataModel({this.success});
 
   @override
-  PatchingModel fromJson(dynamic json) => PatchingModel(success: json['success'] as bool);
+  NoDataModel fromJson(dynamic json) => NoDataModel(success: json['success'] as bool);
+
+  @override
+  List<Object?> get props => [success];
 }
