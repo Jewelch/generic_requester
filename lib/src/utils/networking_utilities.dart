@@ -1,4 +1,4 @@
-import '../../generic_requester.dart' show Either, DioException;
+import '../../generic_requester.dart' show Either;
 
 //* Enums
 enum RestfulMethods {
@@ -14,5 +14,5 @@ enum RestfulMethods {
 }
 
 //* TypeDefs
-typedef FutureRequestResult<T> = Future<Either<DioException, T?>>;
+typedef FutureRequestResult<T> = Future<Either<Exception, T>>;
 typedef StringKeyedMap = Map<String, dynamic>;

@@ -13,18 +13,12 @@ class UnsupportedDataTypeException implements Exception {
 }
 
 class JsonParsingException implements Exception {
-  JsonParsingException() {
-    Debugger.red('An error has Occured during JSON parsing process');
-  }
-}
-
-class MappingException implements Exception {
-  final dynamic type;
-  final dynamic error;
+  final dynamic e;
   final StackTrace stackTrace;
 
-  MappingException(this.type, this.error, this.stackTrace) {
-    Debugger.red('Failed to construct $type from the provided response.\nError: $error');
+  JsonParsingException(this.e, this.stackTrace) {
+    Debugger.red('An error has Occured during JSON parsing process');
+    Debugger.red(e.toString());
     Debugger.red(stackTrace.toString());
   }
 }

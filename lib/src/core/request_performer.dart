@@ -7,7 +7,7 @@ import 'decoder.dart';
 class RequestPerformer {
   final Dio dio;
 
-  RequestPerformer() : dio = Dio();
+  RequestPerformer(this.dio);
 
   @visibleForTesting
   RequestPerformer.mockWith(this.dio);
@@ -21,24 +21,24 @@ class RequestPerformer {
   static void configure(
     BaseOptions baseOptions, {
     QueuedInterceptorsWrapper? interceptor,
-    bool debugginActivated = false,
+    bool debuggingEnabled = false,
     bool mockingEnabled = false,
   }) {
     _baseOptions = baseOptions;
     _interceptor = interceptor;
-    _debugginActivated = debugginActivated;
+    _debuggingEnabled = debuggingEnabled;
     _mockingEnabled = mockingEnabled;
   }
 
   static late BaseOptions _baseOptions;
   static late QueuedInterceptorsWrapper? _interceptor;
-  static bool _debugginActivated = false;
+  static bool _debuggingEnabled = false;
   static bool _mockingEnabled = false;
 
   final _decoder = GenericResponseDecoder();
 
   /// ### A generic method that consumes an API and handles automatic data serialization/mocking
-  Future<R?> performDecodingRequest<R, MP extends ModelingProtocol>({
+  Future<Either<Exception, R>> performDecodingRequest<R, MP extends ModelingProtocol>({
     required MP decodableModel,
     final bool mockIt = false,
     final bool debugIt = true,
@@ -70,7 +70,7 @@ class RequestPerformer {
         _interceptor,
       )
       ..addBasedOnCondition(
-        condition: _debugginActivated || debugIt,
+        condition: _debuggingEnabled || debugIt,
         PrettyDioLogger.instance,
       );
 
@@ -79,12 +79,15 @@ class RequestPerformer {
 
     //! Mocking setup
     if (_mockingEnabled || mockIt) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      return _decoder.decode<MP>(
-        decodableModel,
-        mockingData: mockingData,
-        mocking: true,
-      ) as R;
+      return Future.delayed(
+        const Duration(milliseconds: 500),
+      ).then(
+        (_) => (_decoder.decode<MP>(
+          decodableModel,
+          mockingData: mockingData,
+          mocking: true,
+        )).fold((e) => Left(e), (r) => Right(r as R)),
+      );
     }
 
     //! Request execution
@@ -98,6 +101,9 @@ class RequestPerformer {
           onSendProgress: onSendProgress,
           onReceiveProgress: onReceiveProgress,
         )
-        .then((response) => _decoder.decode<MP>(decodableModel, response: response));
+        .then((response) => _decoder.decode<MP>(decodableModel, response: response).fold(
+              (e) => Left(e),
+              (r) => Right(r as R),
+            ));
   }
 }
