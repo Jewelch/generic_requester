@@ -4,7 +4,7 @@ import '../utils/pretty_dio_logger.dart';
 import 'decoder.dart';
 
 /// #### A Generic request performer based on a smart Dio Interceptor
-class RequestPerformer {
+class RequestPerformer with GenericResponseDecoder {
   final Dio dio;
 
   RequestPerformer(this.dio);
@@ -23,25 +23,27 @@ class RequestPerformer {
     QueuedInterceptorsWrapper? interceptor,
     bool debuggingEnabled = false,
     bool mockingEnabled = false,
+    final int mockingDurationInMs = 500,
   }) {
     _baseOptions = baseOptions;
     _interceptor = interceptor;
     _debuggingEnabled = debuggingEnabled;
     _mockingEnabled = mockingEnabled;
+    _mockingDuration = mockingDurationInMs;
   }
 
   static late BaseOptions _baseOptions;
   static late QueuedInterceptorsWrapper? _interceptor;
   static bool _debuggingEnabled = false;
   static bool _mockingEnabled = false;
-
-  final _decoder = GenericResponseDecoder();
+  static int _mockingDuration = 500;
 
   /// ### A generic method that consumes an API and handles automatic data serialization/mocking
   Future<Either<Exception, R>> performDecodingRequest<R, MP extends ModelingProtocol>({
     required MP decodableModel,
     final bool mockIt = false,
     final bool debugIt = true,
+    final bool simulateFailure = false,
     required RestfulMethods method,
     String? baseUrl,
     required String path,
@@ -55,6 +57,12 @@ class RequestPerformer {
     final ProgressCallback? onReceiveProgress,
     final dynamic mockingData,
   }) async {
+    if (simulateFailure) {
+      return Future.delayed(
+        Duration(milliseconds: _mockingDuration),
+      ).then((_) => Left(Exception('Simulated failure')));
+    }
+
     //! Dio definition
     dio.options = BaseOptions(
       baseUrl: baseUrl ?? _baseOptions.baseUrl,
@@ -80,9 +88,9 @@ class RequestPerformer {
     //! Mocking setup
     if (_mockingEnabled || mockIt) {
       return Future.delayed(
-        const Duration(milliseconds: 500),
+        Duration(milliseconds: _mockingDuration),
       ).then(
-        (_) => (_decoder.decode<MP>(
+        (_) => (decode<MP>(
           decodableModel,
           mockingData: mockingData,
           mocking: true,
@@ -101,7 +109,7 @@ class RequestPerformer {
           onSendProgress: onSendProgress,
           onReceiveProgress: onReceiveProgress,
         )
-        .then((response) => _decoder.decode<MP>(decodableModel, response: response).fold(
+        .then((response) => decode<MP>(decodableModel, response: response).fold(
               (e) => Left(e),
               (r) => Right(r as R),
             ));

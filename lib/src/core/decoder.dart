@@ -3,7 +3,7 @@ import '../models/patching_model.dart';
 import '../utils/either.dart';
 import 'errors/exceptions.dart';
 
-class GenericResponseDecoder {
+mixin GenericResponseDecoder {
   Either<Exception, MP> decode<MP extends ModelingProtocol>(
     MP decodableModel, {
     Response<dynamic>? response,
