@@ -13,4 +13,7 @@ abstract class _Decodable<T> with EquatableMixin {
 
 abstract class ModelingProtocol extends _Decodable {
   const ModelingProtocol();
+
+  @override
+  List<Object?> get props => [];
 }
