@@ -4,6 +4,7 @@ export 'dart:convert' show jsonDecode, jsonEncode;
 export 'dart:io' show HttpHeaders;
 
 export 'package:dio/dio.dart';
+export 'package:equatable/equatable.dart';
 export 'package:flutter/foundation.dart';
 
 export './src/core/errors/exceptions.dart';
