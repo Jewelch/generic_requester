@@ -20,7 +20,7 @@ sealed class Either<L, R> {
 }
 
 extension EitherFutureExt<L, R> on Future<Either<L, R>> {
-  Future<R?> getOrNull() => then((result) => result.fold((_) => null, (data) => data));
+  Future<R?> get getOrNull => then((result) => result.fold((_) => null, (data) => data));
 }
 
 class Left<L, R> extends Either<L, R> {
