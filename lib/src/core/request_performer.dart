@@ -12,7 +12,7 @@ class RequestPerformer with GenericResponseDecoder {
   @visibleForTesting
   RequestPerformer.mockWith(this.dio);
 
-  static final Map<String, dynamic> headers = {
+  static final Map<String, dynamic> _headers = {
     'Content-Type': 'application/json',
   };
 
@@ -20,6 +20,7 @@ class RequestPerformer with GenericResponseDecoder {
 
   static void configure(
     BaseOptions baseOptions, {
+    Map<String, dynamic> headers = const {},
     QueuedInterceptorsWrapper? interceptor,
     bool debuggingEnabled = false,
     bool mockingEnabled = false,
@@ -30,6 +31,7 @@ class RequestPerformer with GenericResponseDecoder {
     _debuggingEnabled = debuggingEnabled;
     _mockingEnabled = mockingEnabled;
     _mockingDuration = mockingDurationInMs;
+    _headers.addAll(headers);
   }
 
   static late BaseOptions _baseOptions;
@@ -67,7 +69,7 @@ class RequestPerformer with GenericResponseDecoder {
     dio.options = BaseOptions(
       baseUrl: baseUrl ?? _baseOptions.baseUrl,
       contentType: contentType,
-      headers: headers..addAll(extraHeaders ?? {}),
+      headers: _headers..addAll(extraHeaders ?? {}),
     );
 
     //! Interceptor setup
@@ -78,7 +80,7 @@ class RequestPerformer with GenericResponseDecoder {
         _interceptor,
       )
       ..addBasedOnCondition(
-        condition: _debuggingEnabled || debugIt,
+        condition: (_debuggingEnabled || debugIt) && kDebugMode,
         PrettyDioLogger.instance,
       );
 
