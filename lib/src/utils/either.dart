@@ -19,6 +19,10 @@ sealed class Either<L, R> {
   R getOrElse(R Function() dflt) => fold((_) => dflt(), (r) => r);
 }
 
+extension EitherFutureExt<L, R> on Future<Either<L, R>> {
+  Future<R?> getOrNull() => then((result) => result.fold((_) => null, (data) => data));
+}
+
 class Left<L, R> extends Either<L, R> {
   final L _l;
   const Left(this._l);
